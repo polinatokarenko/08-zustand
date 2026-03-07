@@ -7,6 +7,7 @@ import { fetchNoteById } from "@/lib/api";
 /*client component*/
 import NoteDetailsClient from "./NoteDetails.client";
 
+/*metadata*/
 import { Metadata } from "next";
 
 type NoteDetailsProps = {
@@ -43,17 +44,15 @@ export async function generateMetadata({ params }: NoteDetailsProps): Promise<Me
     openGraph: {
       title: `Note: ${note.title}`,
       description: note.content.slice(0, 100),
-      url: `https://notehub.com/notes/${id}`,
-      siteName: 'NoteHub',
+      url: `https://08-zustand-one-pied.vercel.app/notes/${id}`,
       images: [
         {
-          url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
           width: 1200,
           height: 630,
-          alt: note.title,
+          alt: "An icon of a note with a completed task, with the application name Notehub displayed next to it.",
         },
       ],
-      type: 'article',
     },
   }
 }

@@ -7,12 +7,11 @@ import css from "./Notes.module.css";
 import { useState, useEffect } from "react";
 import { useQuery, keepPreviousData} from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
+import { useRouter } from "next/navigation";
 
 /*components*/
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
-import Modal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
 import SearchBox from "@/components/SearchBox/SearchBox";
 
 /*services*/
@@ -38,7 +37,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
     const perPage: number = 6;
     
     const [search, setSearch] = useState<string>("");
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     
     const { data, isSuccess, isFetching, isFetched } = useQuery<FetchNotesResponse>({
         queryKey: ["notes", search, page, tag],
@@ -65,7 +63,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
         setPage(1);
     }, 500);
     
-    const handleCloseModal = () => setIsModalVisible(false);
+    const router = useRouter();
 
     return (
     <div className={css.app}>
@@ -73,14 +71,9 @@ export default function NotesClient({ tag }: NotesClientProps) {
       <header className={css.toolbar}>
         <SearchBox onSearch={handleSearch} />
         {(data?.totalPages ?? 0) > 1 && <Pagination page={page} setPage={setPage} totalPages={data?.totalPages ?? 0} />}
-        <button className={css.button} onClick={() => setIsModalVisible(true)}>
+        <button className={css.button} onClick={() => router.replace('/notes/action/create')}>
           Create note +
         </button>
-        {isModalVisible && (
-          <Modal onClose={handleCloseModal}>
-            <NoteForm onClose={handleCloseModal} />
-          </Modal>
-        )}
       </header>
       
       {(data?.notes.length ?? 0) > 0 && <NoteList notes={data?.notes ?? []} />}

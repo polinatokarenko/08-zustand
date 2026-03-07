@@ -7,7 +7,11 @@ import NotesClient from "./Notes.client";
 /*fetch function*/
 import { fetchNotes } from "@/lib/api";
 
-import { tagType } from "@/lib/api";
+/*types*/
+import type { tagType } from "@/lib/api";
+
+/*metadata*/
+import { Metadata } from "next";
 
 type NotesProps = {
   params: Promise<{
@@ -33,4 +37,27 @@ export default async function Notes({ params }: NotesProps) {
       <NotesClient tag={tag ? tag : undefined} />
     </HydrationBoundary>
   );
+};
+
+export async function generateMetadata({ params }: NotesProps): Promise<Metadata> {
+  const firstTag = (await params).slug[0];
+  const tag = firstTag !== "all" && (firstTag as tagType);
+
+  return {
+    title: `All ${tag} Notes`,
+    description: `All notes sorted by tag ${tag}`,
+    openGraph: {
+      title: `All ${tag} Notes`,
+      description: `All notes sorted by tag ${tag}`,
+      url: `https://08-zustand-one-pied.vercel.app/notes/filter/${tag}`,
+      images: [
+        {
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+          width: 1200,
+          height: 630,
+          alt: "An icon of a note with a completed task, with the application name Notehub displayed next to it.",
+        },
+      ],
+    },
+  }
 }
