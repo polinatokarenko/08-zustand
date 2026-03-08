@@ -70,13 +70,13 @@ export default function NotesClient({ tag }: NotesClientProps) {
       <Toaster />
       <header className={css.toolbar}>
         <SearchBox onSearch={handleSearch} />
-        {(data?.totalPages ?? 0) > 1 && <Pagination page={page} setPage={setPage} totalPages={data?.totalPages ?? 0} />}
-        <button className={css.button} onClick={() => router.replace('/notes/action/create')}>
+        <button className={css.button} onClick={() => router.push('/notes/action/create')}>
           Create note +
         </button>
       </header>
       
       {(data?.notes.length ?? 0) > 0 && <NoteList notes={data?.notes ?? []} />}
+      {(data?.totalPages ?? 0) > 1 && data?.notes !== undefined && data?.notes.length > 0 && <Pagination page={page} setPage={setPage} totalPages={data?.totalPages ?? 0} />}
     </div>
   );
 }
